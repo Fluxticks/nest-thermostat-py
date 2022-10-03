@@ -206,3 +206,28 @@ class ThermostatHvacTrait(Trait):
     @property
     def status(self):
         return self._status
+
+
+class ThermostatModeTrait(Trait):
+    __slots__ = ("_mode", "_available_modes")
+
+    def __init__(self, data: dict):
+        if not data:
+            self._available_modes = []
+            self._mode = "OFF"
+        else:
+            self._available_modes = data.get("availableModes")
+            self._mode = data.get("mode")
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.ThermostatMode"
+
+    @property
+    def allowed_modes(self):
+        return self._available_modes
+
+    @property
+    def mode(self):
+        return self._mode
