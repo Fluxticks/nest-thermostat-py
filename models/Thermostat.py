@@ -66,7 +66,7 @@ class Thermostat:
         return self._connectivity.is_connected
 
     @property
-    def fan_timer_mode(self):
+    def is_fan_on(self):
         return self._fan.is_on
 
     @property
@@ -90,7 +90,7 @@ class Thermostat:
         return self._temperature.room_temperature
 
     @property
-    def eco_mode(self):
+    def eco_mode_on(self):
         return self._thermostat_eco.eco_mode_on
 
     @property
@@ -102,7 +102,7 @@ class Thermostat:
         return self._thermostat_eco.cool_target
 
     @property
-    def hvac_mode(self):
+    def hvac_mode_on(self):
         return self._thermostat_hvac.is_on
 
     @property
