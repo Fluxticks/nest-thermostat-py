@@ -4,6 +4,10 @@ class Thermostat:
         self._raw_data = data
 
     @property
+    def device_id(self):
+        return self._device_id
+
+    @property
     def is_connected(self):
         return self._connectivity
 
