@@ -1,0 +1,3 @@
+class Thermostat:
+
+    pass
