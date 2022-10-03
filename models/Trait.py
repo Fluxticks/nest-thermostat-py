@@ -123,3 +123,22 @@ class SettingsTrait(Trait):
     @property
     def temperature_unit(self):
         return self._temperature_scale
+
+
+class TemperatureTrait(Trait):
+    __slots__ = "_ambient_temperature"
+
+    def __init__(self, data: dict):
+        if not data:
+            self._ambient_temperature = 0
+        else:
+            self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.Temperature"
+
+    @property
+    def room_temperature(self):
+        return self._ambient_temperature
