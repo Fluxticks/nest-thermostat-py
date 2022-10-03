@@ -43,10 +43,26 @@ class Auth:
             async with session.post(REAUTH_URL, params=params) as resp:
                 if resp.status != 200:
                     raise ValueError(
-                        "Unable to reauthorize with the given refresh token!"
+                        "Unable to reauthorize and grant new access token!"
                     )
                 else:
                     data = await resp.json()
                     self._access_token = data.get("access_token")
                     self._next_refresh = time() + data.get("expires_in")
         return self._access_token
+
+    async def get_devices(self):
+        session_token = await self.get_access_token()
+        DEVICES_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self._project_id}/devices"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {session_token}",
+        }
+        async with aiohttp.ClientSession() as session:
+            async with session.get(DEVICES_URL, headers=headers) as resp:
+                if resp.status != 200:
+                    raise ValueError(
+                        "Unable to access device list with given credentials"
+                    )
+                else:
+                    return await resp.json().get("structures")
