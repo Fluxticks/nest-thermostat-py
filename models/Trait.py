@@ -84,3 +84,23 @@ class HumidityTrait(Trait):
     @property
     def humidity(self):
         return self._humidity_percentage
+
+
+class InfoTrait(Trait):
+    __slots__ = "_name"
+
+    def __init__(self, data: dict):
+        if not data:
+            self._name = "Thermostat"
+        else:
+            self._name = data.get("customName")
+
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.Info"
+
+    @property
+    def name(self):
+        return self._name
