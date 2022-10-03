@@ -124,7 +124,7 @@ class SettingsTrait(Trait):
 
     def __init__(self, data: dict):
         if not data:
-            self._temperature_scale = "Celcius"
+            self._temperature_scale = "CELSIUS"
         else:
             self._temperature_scale = data.get("temperatureScale")
         super().__init__(self.domain())
