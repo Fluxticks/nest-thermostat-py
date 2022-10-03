@@ -6,6 +6,7 @@ THERMOSTAT_TYPE = "sdm.devices.types.THERMOSTAT"
 
 class Thermostat:
     __slots__ = (
+        "_raw_data",
         "_device_id",
         "_connectivity",
         "_fan",
