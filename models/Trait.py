@@ -1,5 +1,18 @@
 from abc import abstractclassmethod
 
+__all__ = [
+    "ConnectivityTrait",
+    "FanTrait",
+    "HumidityTrait",
+    "InfoTrait",
+    "SettingsTrait",
+    "TemperatureTrait",
+    "ThermostatEcoTrait",
+    "ThermostatHvacTrait",
+    "ThermostatModeTrait",
+    "ThermostatTemperatureSetpointTrait",
+]
+
 
 class Trait:
     __slots__ = ("_domain", "name")

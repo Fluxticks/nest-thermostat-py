@@ -1,15 +1,4 @@
-from models.Trait import (
-    ConnectivityTrait,
-    FanTrait,
-    HumidityTrait,
-    InfoTrait,
-    SettingsTrait,
-    TemperatureTrait,
-    ThermostatEcoTrait,
-    ThermostatHvacTrait,
-    ThermostatModeTrait,
-    ThermostatTemperatureSetpointTrait,
-)
+from models.Trait import *
 
 
 THERMOSTAT_TYPE = "sdm.devices.types.THERMOSTAT"
