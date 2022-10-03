@@ -231,3 +231,28 @@ class ThermostatModeTrait(Trait):
     @property
     def mode(self):
         return self._mode
+
+
+class ThermostatTemperatureSetpointTrait(Trait):
+    __slots__ = ("_heat_target", "_cool_target")
+
+    def __init__(self, data: dict):
+        if not data:
+            self._heat_target = 0
+            self._cool_target = 0
+        else:
+            self._heat_target = float(data.get("heatCelsius"))
+            self._cool_target = float(data.get("coolCelsius"))
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "ThermostatTemperatureSetpoint"
+
+    @property
+    def heat_temperature(self):
+        return self._heat_target
+
+    @property
+    def cool_temperature(self):
+        return self._cool_target
