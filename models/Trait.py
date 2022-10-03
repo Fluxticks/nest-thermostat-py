@@ -260,7 +260,7 @@ class ThermostatTemperatureSetpointTrait(Trait):
 
     @classmethod
     def domain(cls):
-        return "ThermostatTemperatureSetpoint"
+        return "sdm.devices.traits.ThermostatTemperatureSetpoint"
 
     @property
     def heat_temperature(self):
