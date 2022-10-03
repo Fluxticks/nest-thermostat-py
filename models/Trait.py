@@ -183,3 +183,26 @@ class ThermostatEcoTrait(Trait):
     @property
     def cool_target(self):
         return self._cool_target
+
+
+class ThermostatHvacTrait(Trait):
+    __slots__ = "_status"
+
+    def __init__(self, data: dict):
+        if not data:
+            self._status = "OFF"
+        else:
+            self._status = data.get("status")
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.ThermostatHvac"
+
+    @property
+    def is_on(self):
+        return self._status != "OFF"
+
+    @property
+    def status(self):
+        return self._status
