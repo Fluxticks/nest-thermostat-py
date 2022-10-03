@@ -64,3 +64,23 @@ class FanTrait(Trait):
     def stop_time(self):
         # TODO: Convert to datetime value
         return self._timer_timeout
+
+
+class HumidityTrait(Trait):
+    __slots__ = "_humidity_percentage"
+
+    def __init__(self, data: dict):
+        if not data:
+            self._humidity_percentage = 0
+        else:
+            self._humidity_percentage = float(data.get("ambientHumidityPercent"))
+
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.Humidity"
+
+    @property
+    def humidity(self):
+        return self._humidity_percentage
