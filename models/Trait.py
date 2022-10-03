@@ -104,3 +104,22 @@ class InfoTrait(Trait):
     @property
     def name(self):
         return self._name
+
+
+class SettingsTrait(Trait):
+    __slots__ = "_temperature_scale"
+
+    def __init__(self, data: dict):
+        if not data:
+            self._temperature_scale = "Celcius"
+        else:
+            self._temperature_scale = data.get("temperatureScale")
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.Settings"
+
+    @property
+    def temperature_unit(self):
+        return self._temperature_scale
