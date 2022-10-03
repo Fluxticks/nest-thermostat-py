@@ -15,11 +15,11 @@ __all__ = [
 
 
 class Trait:
-    __slots__ = ("_domain", "name")
+    __slots__ = ("_domain", "trait_name")
 
     def __init__(self, domain: str):
         self._domain = domain
-        self.name = self._domain.split(".")[-1]
+        self.trait_name = self._domain.split(".")[-1]
 
     @abstractclassmethod
     def domain(cls):
