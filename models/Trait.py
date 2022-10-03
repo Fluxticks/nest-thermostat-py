@@ -142,3 +142,44 @@ class TemperatureTrait(Trait):
     @property
     def room_temperature(self):
         return self._ambient_temperature
+
+
+class ThermostatEcoTrait(Trait):
+    __slots__ = ("_available_modes", "_mode", "_heat_target", "_cool_target")
+
+    def __init__(self, data: dict):
+        if not data:
+            self._available_modes = []
+            self._mode = "OFF"
+            self._heat_target = 0
+            self._cool_target = 0
+        else:
+            self._available_modes = data.get("availableModes")
+            self._mode = data.get("mode")
+            self._heat_target = float(data.get("heatCelsius"))
+            self._cool_target = float(data.get("coolCelsius"))
+        super().__init__(self.domain())
+
+    @classmethod
+    def domain(cls):
+        return "sdm.devices.traits.ThermostatEco"
+
+    @property
+    def allowed_modes(self):
+        return self._available_modes
+
+    @property
+    def mode_value(self):
+        return self._mode
+
+    @property
+    def eco_mode_on(self):
+        return self._mode != "OFF"
+
+    @property
+    def heat_target(self):
+        return self._heat_target
+
+    @property
+    def cool_target(self):
+        return self._cool_target
