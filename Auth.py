@@ -51,18 +51,6 @@ class Auth:
                     self._next_refresh = time() + data.get("expires_in")
         return self._access_token
 
-    async def get_devices(self):
-        session_token = await self.get_access_token()
-        DEVICES_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self._project_id}/devices"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {session_token}",
-        }
-        async with aiohttp.ClientSession() as session:
-            async with session.get(DEVICES_URL, headers=headers) as resp:
-                if resp.status != 200:
-                    raise ValueError(
-                        "Unable to access device list with given credentials"
-                    )
-                else:
-                    return await resp.json().get("structures")
+    @property
+    def project_id(self):
+        return self._project_id
