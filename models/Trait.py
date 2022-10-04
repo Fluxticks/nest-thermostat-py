@@ -353,7 +353,7 @@ class ThermostatTemperatureSetpointTrait(Trait):
         return self._cool_target
 
     async def set_heat(self, api: Api, heat_value: float):
-        if not isinstance(heat_value, float) or not isinstance(heat_value, int):
+        if not isinstance(heat_value, float) and not isinstance(heat_value, int):
             raise ValueError(
                 f"The temperature must be given as either a float or int, not {type(heat_value).__name__}"
             )
@@ -367,7 +367,7 @@ class ThermostatTemperatureSetpointTrait(Trait):
             self._heat_target = heat_value
 
     async def set_cool(self, api: Api, cool_value: float):
-        if not isinstance(cool_value, float) or not isinstance(cool_value, int):
+        if not isinstance(cool_value, float) and not isinstance(cool_value, int):
             raise ValueError(
                 f"The temperature must be given as either a float or int, not {type(cool_value).__name__}"
             )
@@ -381,12 +381,12 @@ class ThermostatTemperatureSetpointTrait(Trait):
             self._cool_target = cool_value
 
     async def set_range(self, api: Api, heat_value: float, cool_value: float):
-        if not isinstance(heat_value, float) or not isinstance(heat_value, int):
+        if not isinstance(heat_value, float) and not isinstance(heat_value, int):
             raise ValueError(
                 f"The heat temperature must be given as either a float or int, not {type(heat_value).__name__}"
             )
 
-        if not isinstance(cool_value, float) or not isinstance(cool_value, int):
+        if not isinstance(cool_value, float) and not isinstance(cool_value, int):
             raise ValueError(
                 f"The cool temperature must be given as either a float or int, not {type(cool_value).__name__}"
             )
