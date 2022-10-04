@@ -33,7 +33,7 @@ class Api:
             "Authorization": f"Bearer {session_token}",
         }
         async with aiohttp.ClientSession() as session:
-            async with session.get(DEVICE_URL, headers) as resp:
+            async with session.get(DEVICE_URL, headers=headers) as resp:
                 if resp.status != 200:
                     raise ValueError(
                         f"Unable to access device with ID {device_id}. Could be incorrect credentials or device ID"
