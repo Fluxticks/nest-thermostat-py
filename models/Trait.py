@@ -307,9 +307,9 @@ class ThermostatTemperatureSetpointTrait(Trait):
         return "sdm.devices.traits.ThermostatTemperatureSetpoint"
 
     @property
-    def heat_temperature(self):
+    def heat_target(self):
         return self._heat_target
 
     @property
-    def cool_temperature(self):
+    def cool_target(self):
         return self._cool_target
