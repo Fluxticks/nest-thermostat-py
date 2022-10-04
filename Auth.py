@@ -23,12 +23,12 @@ class Auth:
         self._project_id = project_id
         self._access_token = access_token
         self._refresh_token = refresh_token
-        self._next_refresh = None
+        self._next_refresh = 0
         self._client_id = client_id
         self._client_secret = client_secret
 
     async def get_access_token(self):
-        if time() < self._next_refresh:
+        if self._access_token is not None and time() < self._next_refresh:
             return self._access_token
 
         REAUTH_URL = f"https://www.googleapis.com/oauth2/v4/token"
