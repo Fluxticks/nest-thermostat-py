@@ -110,6 +110,8 @@ class InfoTrait(Trait):
             self._name = "Thermostat"
         else:
             self._name = data.get("customName")
+            if not self._name:
+                self._name = "Thermostat"
 
         super().__init__(self.domain())
 
