@@ -84,6 +84,20 @@ class FanTrait(Trait):
         # TODO: Convert to datetime value
         return self.timeout_string
 
+    async def set_timer(self, api: Api, seconds: int):
+        if seconds < 0:
+            raise ValueError("The fan timer cannot be set to less than 0 seconds.")
+
+        result = await api.post_command(
+            self.device_id,
+            "sdm.devices.commands.Fan.SetTimer",
+            {"timerMode": "ON", "duration": seconds},
+        )
+
+        if result:
+            self._timer_mode = "ON"
+            # TODO: Update timeout string
+
 
 class HumidityTrait(Trait):
     __slots__ = "_humidity_percentage"
