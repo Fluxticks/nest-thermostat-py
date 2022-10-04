@@ -52,7 +52,7 @@ class ConnectivityTrait(Trait):
 
 
 class FanTrait(Trait):
-    __slots__ = ("_timer_mode", "_timer_timeout")
+    __slots__ = ("_timer_mode", "_timer_timeout", "_available_modes")
 
     def __init__(self, device_id: str, data: dict):
         if not data:
@@ -61,6 +61,7 @@ class FanTrait(Trait):
         else:
             self._timer_mode = data.get("timerMode")
             self._timer_timeout = data.get("timerTimeout")
+        self._available_modes = ["ON", "OFF"]
         super().__init__(device_id)
 
     @classmethod
@@ -84,19 +85,28 @@ class FanTrait(Trait):
         # TODO: Convert to datetime value
         return self.timeout_string
 
-    async def set_timer(self, api: Api, seconds: int):
+    @property
+    def allowed_modes(self):
+        return self._available_modes
+
+    async def set_mode(self, api: Api, new_mode: str, seconds: int):
         if seconds < 0:
             raise ValueError("The fan timer cannot be set to less than 0 seconds.")
+
+        if new_mode not in self.allowed_modes:
+            raise ValueError(
+                f"The given set mode of '{new_mode}' is not in the allowed list of modes: {self.allowed_modes}"
+            )
 
         result = await api.post_command(
             self.device_id,
             "sdm.devices.commands.Fan.SetTimer",
-            {"timerMode": "ON", "duration": seconds},
+            {"timerMode": new_mode, "duration": seconds},
         )
 
         if result:
-            self._timer_mode = "ON"
             # TODO: Update timeout string
+            self._timer_mode = new_mode
 
 
 class HumidityTrait(Trait):
