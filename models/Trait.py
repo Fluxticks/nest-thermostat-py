@@ -353,7 +353,18 @@ class ThermostatTemperatureSetpointTrait(Trait):
         return self._cool_target
 
     async def set_heat(self, api: Api, heat_value: float):
-        pass
+        if not isinstance(heat_value, float) or not isinstance(heat_value, int):
+            raise ValueError(
+                f"The temperature must be given as either a float or int, not {type(heat_value).__name__}"
+            )
+
+        result = await api.post_command(
+            self.device_id,
+            "sdm.devices.commands.ThermostatTemperatureSetpoint.SetHeat",
+            {"heatCelsius": heat_value},
+        )
+        if result:
+            self._heat_target = heat_value
 
     async def set_cool(self, api: Api, cool_value: float):
         pass
