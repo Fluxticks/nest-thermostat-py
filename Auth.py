@@ -2,14 +2,19 @@ from time import time
 import aiohttp
 
 
-class ResponseCodes:
-    def __init__(self):
-        pass
+class ResponseCode(Exception):
+    def __init__(self, code: int, error: dict, *args: object) -> None:
+        super().__init__(*args)
+        self.code = code
+        if isinstance(error.get("error"), dict):
+            self.status = error.get("error").get("status")
+            self.message = error.get("error").get("message")
+        else:
+            self.status = error.get("error")
+            self.message = error.get("error_description")
 
-    @property
-    def OK(self):
-        # 200
-        pass
+    def __str__(self):
+        return f"{self.code} - {self.status} : {self.message}"
 
     @property
     def NOT_FOUND(self):
@@ -82,9 +87,7 @@ class Auth:
         async with aiohttp.ClientSession() as session:
             async with session.post(REAUTH_URL, params=params) as resp:
                 if resp.status != 200:
-                    raise ValueError(
-                        "Unable to reauthorize and grant new access token!"
-                    )
+                    raise ResponseCode(resp.status, error=await resp.json())
                 else:
                     data = await resp.json()
                     self._access_token = data.get("access_token")
