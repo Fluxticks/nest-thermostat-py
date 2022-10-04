@@ -3,7 +3,6 @@ from models.Trait import *
 
 
 THERMOSTAT_TYPE = "sdm.devices.types.THERMOSTAT"
-TRAIT_COUNT = 10
 
 
 class Thermostat:
