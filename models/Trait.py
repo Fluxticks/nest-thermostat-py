@@ -231,6 +231,20 @@ class ThermostatEcoTrait(Trait):
     def cool_target(self):
         return self._cool_target
 
+    async def set_mode(self, api: Api, new_mode: str):
+        if new_mode not in self.allowed_modes:
+            raise ValueError(
+                f"The given set mode of '{new_mode}' is not in the allowed list of modes: {self.allowed_modes}"
+            )
+
+        result = await api.post_command(
+            self.device_id,
+            "sdm.devices.commands.ThermostatEco.SetMode",
+            {"mode": new_mode},
+        )
+        if result:
+            self._mode = new_mode
+
 
 class ThermostatHvacTrait(Trait):
     __slots__ = "_status"
