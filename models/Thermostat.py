@@ -57,6 +57,10 @@ class Thermostat:
             traits.get(ThermostatTemperatureSetpointTrait.domain())
         )
 
+    async def update_device(self, api: Api):
+        data = await api.get_exact_device(self.device_id)
+        self.set_values(data)
+
     @property
     def device_id(self):
         return self._device_id
