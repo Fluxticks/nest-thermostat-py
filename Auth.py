@@ -2,6 +2,46 @@ from time import time
 import aiohttp
 
 
+class ResponseCodes:
+    def __init__(self):
+        pass
+
+    @property
+    def OK(self):
+        # 200
+        pass
+
+    @property
+    def NOT_FOUND(self):
+        # 404
+        pass
+
+    @property
+    def UNAUTHENTICATED(self):
+        # 401 - probably
+        pass
+
+    @property
+    def FAILED_PRECONDITION(self):
+        # 400
+        pass
+
+    @property
+    def INVALID_ARGUMENT(self):
+        # 400
+        pass
+
+    @property
+    def RESOURCE_EXHAUSTED(self):
+        # 429
+        pass
+
+    @property
+    def invalid_client(self):
+        # 401
+        pass
+
+
 class Auth:
     __slots__ = (
         "_project_id",
