@@ -77,9 +77,13 @@ class FanTrait(Trait):
         return self.mode == "ON"
 
     @property
-    def stop_time(self):
-        # TODO: Convert to datetime value
+    def timeout_string(self):
         return self._timer_timeout
+
+    @property
+    def timeout_time(self):
+        # TODO: Convert to datetime value
+        return self.timeout_string
 
 
 class HumidityTrait(Trait):
