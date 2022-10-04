@@ -381,4 +381,21 @@ class ThermostatTemperatureSetpointTrait(Trait):
             self._cool_target = cool_value
 
     async def set_range(self, api: Api, heat_value: float, cool_value: float):
-        pass
+        if not isinstance(heat_value, float) or not isinstance(heat_value, int):
+            raise ValueError(
+                f"The heat temperature must be given as either a float or int, not {type(heat_value).__name__}"
+            )
+
+        if not isinstance(cool_value, float) or not isinstance(cool_value, int):
+            raise ValueError(
+                f"The cool temperature must be given as either a float or int, not {type(cool_value).__name__}"
+            )
+
+        result = await api.post_command(
+            self.device_id,
+            "sdm.devices.commands.ThermostatTemperatureSetpoint.SetRange",
+            {"heatCelsius": heat_value, "coolCelsius": cool_value},
+        )
+        if result:
+            self._heat_target = heat_value
+            self._cool_target = cool_value
