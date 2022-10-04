@@ -14,7 +14,7 @@ class Api:
         return self._auth.project_id
 
     async def get_session_auth(self):
-        session_token = self._auth.get_access_token()
+        session_token = await self._auth.get_access_token()
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {session_token}",
