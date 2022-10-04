@@ -17,11 +17,12 @@ __all__ = [
 
 
 class Trait:
-    __slots__ = ("_domain", "trait_name")
+    __slots__ = ("_domain", "trait_name", "device_id")
 
-    def __init__(self, domain: str):
+    def __init__(self, domain: str, device_id: str):
         self._domain = domain
         self.trait_name = self._domain.split(".")[-1]
+        self.device_id = device_id
 
     @abstractclassmethod
     def domain(cls):
@@ -31,12 +32,12 @@ class Trait:
 class ConnectivityTrait(Trait):
     __slots__ = "_status"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._status = "OFFLINE"
         else:
             self._status = data.get("status")
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -54,14 +55,14 @@ class ConnectivityTrait(Trait):
 class FanTrait(Trait):
     __slots__ = ("_timer_mode", "_timer_timeout")
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._timer_mode = None
             self._timer_timeout = None
         else:
             self._timer_mode = data.get("timerMode")
             self._timer_timeout = data.get("timerTimeout")
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -84,7 +85,7 @@ class FanTrait(Trait):
 class HumidityTrait(Trait):
     __slots__ = "_humidity_percentage"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._humidity_percentage = 0
         else:
@@ -93,7 +94,7 @@ class HumidityTrait(Trait):
             except TypeError:
                 self._humidity_percentage = None
 
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -107,7 +108,7 @@ class HumidityTrait(Trait):
 class InfoTrait(Trait):
     __slots__ = "_name"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._name = "Thermostat"
         else:
@@ -115,7 +116,7 @@ class InfoTrait(Trait):
             if not self._name:
                 self._name = "Thermostat"
 
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -129,12 +130,12 @@ class InfoTrait(Trait):
 class SettingsTrait(Trait):
     __slots__ = "_temperature_scale"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._temperature_scale = "CELSIUS"
         else:
             self._temperature_scale = data.get("temperatureScale")
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -148,7 +149,7 @@ class SettingsTrait(Trait):
 class TemperatureTrait(Trait):
     __slots__ = "_ambient_temperature"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._ambient_temperature = 0
         else:
@@ -156,7 +157,7 @@ class TemperatureTrait(Trait):
                 self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
             except TypeError:
                 self._ambient_temperature = None
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -170,7 +171,7 @@ class TemperatureTrait(Trait):
 class ThermostatEcoTrait(Trait):
     __slots__ = ("_available_modes", "_mode", "_heat_target", "_cool_target")
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._available_modes = []
             self._mode = "OFF"
@@ -187,7 +188,7 @@ class ThermostatEcoTrait(Trait):
                 self._cool_target = float(data.get("coolCelsius"))
             except TypeError:
                 self._cool_target = None
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -217,12 +218,12 @@ class ThermostatEcoTrait(Trait):
 class ThermostatHvacTrait(Trait):
     __slots__ = "_status"
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._status = "OFF"
         else:
             self._status = data.get("status")
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -240,14 +241,14 @@ class ThermostatHvacTrait(Trait):
 class ThermostatModeTrait(Trait):
     __slots__ = ("_mode", "_available_modes")
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._available_modes = []
             self._mode = "OFF"
         else:
             self._available_modes = data.get("availableModes")
             self._mode = data.get("mode")
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
@@ -267,13 +268,11 @@ class ThermostatModeTrait(Trait):
                 f"The given set mode of '{new_mode}' is not in the allowed list of modes: {self.allowed_modes}"
             )
 
-        MODE_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{api.project_id}/{self.device_id}:executeCommand"
-        data = {
-            "command": "sdm.devices.commands.ThermostatMode.SetMode",
-            "params": {"mode": new_mode},
-        }
-
-        result = await api.post_command(MODE_URL, data)
+        result = await api.post_command(
+            self.device_id,
+            "sdm.devices.commands.ThermostatMode.SetMode",
+            {"mode": new_mode},
+        )
         if result:
             self._mode = new_mode
 
@@ -281,7 +280,7 @@ class ThermostatModeTrait(Trait):
 class ThermostatTemperatureSetpointTrait(Trait):
     __slots__ = ("_heat_target", "_cool_target")
 
-    def __init__(self, data: dict):
+    def __init__(self, device_id: str, data: dict):
         if not data:
             self._heat_target = 0
             self._cool_target = 0
@@ -294,7 +293,7 @@ class ThermostatTemperatureSetpointTrait(Trait):
                 self._cool_target = float(data.get("coolCelsius"))
             except TypeError:
                 self._cool_target = None
-        super().__init__(self.domain())
+        super().__init__(self.domain(), device_id)
 
     @classmethod
     def domain(cls):
