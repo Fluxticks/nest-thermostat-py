@@ -154,7 +154,7 @@ class TemperatureTrait(Trait):
 
     def __init__(self, device_id: str, data: dict):
         if not data:
-            self._ambient_temperature = 0
+            self._ambient_temperature = None
         else:
             try:
                 self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
