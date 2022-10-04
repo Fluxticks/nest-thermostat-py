@@ -351,3 +351,12 @@ class ThermostatTemperatureSetpointTrait(Trait):
     @property
     def cool_target(self):
         return self._cool_target
+
+    async def set_heat(self, api: Api, heat_value: float):
+        pass
+
+    async def set_cool(self, api: Api, cool_value: float):
+        pass
+
+    async def set_range(self, api: Api, heat_value: float, cool_value: float):
+        pass
