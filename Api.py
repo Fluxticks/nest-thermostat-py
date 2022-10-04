@@ -1,4 +1,4 @@
-from Auth import Auth
+from Auth import Auth, ResponseCode
 import aiohttp
 
 
@@ -27,9 +27,7 @@ class Api:
         async with aiohttp.ClientSession() as session:
             async with session.get(DEVICES_URL, headers=headers) as resp:
                 if resp.status != 200:
-                    raise ValueError(
-                        "Unable to access device list with given credentials"
-                    )
+                    raise ResponseCode(resp.status, error=await resp.json())
                 else:
                     return await resp.json().get("devices")
 
@@ -39,9 +37,7 @@ class Api:
         async with aiohttp.ClientSession() as session:
             async with session.get(DEVICE_URL, headers=headers) as resp:
                 if resp.status != 200:
-                    raise ValueError(
-                        f"Unable to access device with ID {device_id}. Could be incorrect credentials or device ID"
-                    )
+                    raise ResponseCode(resp.status, error=await resp.json())
                 else:
                     return await resp.json()
 
@@ -53,8 +49,6 @@ class Api:
         async with aiohttp.ClientSession() as session:
             async with session.post(COMMAND_URL, headers=headers, data=data) as resp:
                 if resp.status != 200:
-                    raise ValueError(
-                        f"Unable to post command to device with ID {device_id}. Could be incorrect credentials or device ID"
-                    )
+                    raise ResponseCode(resp.status, error=await resp.json())
                 else:
                     return True
