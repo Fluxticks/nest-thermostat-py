@@ -1,4 +1,5 @@
 from time import time
+from typing import Coroutine, Tuple
 import aiohttp
 
 
@@ -16,35 +17,17 @@ class ResponseCode(Exception):
     def __str__(self):
         return f"{self.code} - {self.status} : {self.message}"
 
-    @property
-    def NOT_FOUND(self):
-        # 404
-        pass
 
-    @property
-    def UNAUTHENTICATED(self):
-        # 401 - probably
-        pass
-
-    @property
-    def FAILED_PRECONDITION(self):
-        # 400
-        pass
-
-    @property
-    def INVALID_ARGUMENT(self):
-        # 400
-        pass
-
-    @property
-    def RESOURCE_EXHAUSTED(self):
-        # 429
-        pass
-
-    @property
-    def invalid_client(self):
-        # 401
-        pass
+async def call_handler(api_call: dict) -> Tuple[bool, str]:
+    # api_call : {"function": Coroutine, "args": [], "kwargs": {}}
+    function: Coroutine = api_call.get("function")
+    args = api_call.get("args")
+    kwargs = api_call.get("kwargs")
+    try:
+        result = await function(*args, **kwargs)
+        return result, "success"
+    except ResponseCode as e:
+        return False, e.message
 
 
 class Auth:
