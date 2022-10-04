@@ -1,4 +1,4 @@
-from Auth import Auth, ResponseCode
+from Auth import Auth, ResponseCode, call_handler
 import aiohttp
 
 
@@ -42,6 +42,23 @@ class Api:
                     return await resp.json()
 
     async def post_command(self, device_id: str, command: str, params: dict):
+        result, message = await call_handler(
+            {
+                "function": self._post_command,
+                "kwargs": {
+                    "device_id": device_id,
+                    "command": command,
+                    "params": params,
+                },
+            }
+        )
+        if not result:
+            raise ValueError(
+                f"There was an error while executing the command '{command}' - {message}"
+            )
+        return True
+
+    async def _post_command(self, device_id: str, command: str, params: dict):
         COMMAND_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self.project_id}/{device_id}:executeCommand"
         data = {"command": command, "params": params}
         _, headers = await self.get_session_auth()
