@@ -289,8 +289,8 @@ class ThermostatTemperatureSetpointTrait(Trait):
 
     def __init__(self, device_id: str, data: dict):
         if not data:
-            self._heat_target = 0
-            self._cool_target = 0
+            self._heat_target = None
+            self._cool_target = None
         else:
             try:
                 self._heat_target = float(data.get("heatCelsius"))
