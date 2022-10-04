@@ -1,5 +1,7 @@
 from abc import abstractclassmethod
 
+from Api import Api
+
 __all__ = [
     "ConnectivityTrait",
     "FanTrait",
@@ -258,6 +260,22 @@ class ThermostatModeTrait(Trait):
     @property
     def mode(self):
         return self._mode
+
+    async def set_mode(self, api: Api, new_mode: str):
+        if new_mode not in self.allowed_modes:
+            raise ValueError(
+                f"The given set mode of '{new_mode}' is not in the allowed list of modes: {self.allowed_modes}"
+            )
+
+        MODE_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{api.project_id}/{self.device_id}:executeCommand"
+        data = {
+            "command": "sdm.devices.commands.ThermostatMode.SetMode",
+            "params": {"mode": new_mode},
+        }
+
+        result = await api.post_command(MODE_URL, data)
+        if result:
+            self._mode = new_mode
 
 
 class ThermostatTemperatureSetpointTrait(Trait):
