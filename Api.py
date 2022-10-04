@@ -23,4 +23,4 @@ class Api:
                         "Unable to access device list with given credentials"
                     )
                 else:
-                    return await resp.json().get("structures")
+                    return await resp.json().get("devices")
