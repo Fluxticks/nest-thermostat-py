@@ -21,8 +21,8 @@ class ResponseCode(Exception):
 async def call_handler(api_call: dict) -> Tuple[bool, str]:
     # api_call : {"function": Coroutine, "args": [], "kwargs": {}}
     function: Coroutine = api_call.get("function")
-    args = api_call.get("args")
-    kwargs = api_call.get("kwargs")
+    args = api_call.get("args", [])
+    kwargs = api_call.get("kwargs", {})
     try:
         result = await function(*args, **kwargs)
         return result, "success"
