@@ -178,8 +178,8 @@ class ThermostatEcoTrait(Trait):
         if not data:
             self._available_modes = []
             self._mode = "OFF"
-            self._heat_target = 0
-            self._cool_target = 0
+            self._heat_target = None
+            self._cool_target = None
         else:
             self._available_modes = data.get("availableModes")
             self._mode = data.get("mode")
