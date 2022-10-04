@@ -17,11 +17,10 @@ __all__ = [
 
 
 class Trait:
-    __slots__ = ("_domain", "trait_name", "device_id")
+    __slots__ = ("trait_name", "device_id")
 
-    def __init__(self, domain: str, device_id: str):
-        self._domain = domain
-        self.trait_name = self._domain.split(".")[-1]
+    def __init__(self, device_id: str):
+        self.trait_name = self.domain().split(".")[-1]
         self.device_id = device_id
 
     @abstractclassmethod
@@ -37,7 +36,7 @@ class ConnectivityTrait(Trait):
             self._status = "OFFLINE"
         else:
             self._status = data.get("status")
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -62,7 +61,7 @@ class FanTrait(Trait):
         else:
             self._timer_mode = data.get("timerMode")
             self._timer_timeout = data.get("timerTimeout")
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -98,7 +97,7 @@ class HumidityTrait(Trait):
             except TypeError:
                 self._humidity_percentage = None
 
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -120,7 +119,7 @@ class InfoTrait(Trait):
             if not self._name:
                 self._name = "Thermostat"
 
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -139,7 +138,7 @@ class SettingsTrait(Trait):
             self._temperature_scale = "CELSIUS"
         else:
             self._temperature_scale = data.get("temperatureScale")
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -161,7 +160,7 @@ class TemperatureTrait(Trait):
                 self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
             except TypeError:
                 self._ambient_temperature = None
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -192,7 +191,7 @@ class ThermostatEcoTrait(Trait):
                 self._cool_target = float(data.get("coolCelsius"))
             except TypeError:
                 self._cool_target = None
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -227,7 +226,7 @@ class ThermostatHvacTrait(Trait):
             self._status = "OFF"
         else:
             self._status = data.get("status")
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -252,7 +251,7 @@ class ThermostatModeTrait(Trait):
         else:
             self._available_modes = data.get("availableModes")
             self._mode = data.get("mode")
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
@@ -297,7 +296,7 @@ class ThermostatTemperatureSetpointTrait(Trait):
                 self._cool_target = float(data.get("coolCelsius"))
             except TypeError:
                 self._cool_target = None
-        super().__init__(self.domain(), device_id)
+        super().__init__(device_id)
 
     @classmethod
     def domain(cls):
