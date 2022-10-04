@@ -90,7 +90,7 @@ class HumidityTrait(Trait):
 
     def __init__(self, device_id: str, data: dict):
         if not data:
-            self._humidity_percentage = 0
+            self._humidity_percentage = None
         else:
             try:
                 self._humidity_percentage = float(data.get("ambientHumidityPercent"))
