@@ -265,6 +265,10 @@ class ThermostatModeTrait(Trait):
     def mode(self):
         return self._mode
 
+    @property
+    def is_on(self):
+        return self.mode != "OFF"
+
     async def set_mode(self, api: Api, new_mode: str):
         if new_mode not in self.allowed_modes:
             raise ValueError(
