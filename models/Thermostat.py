@@ -1,10 +1,24 @@
+from Api import Api
 from models.Trait import *
 
 
 THERMOSTAT_TYPE = "sdm.devices.types.THERMOSTAT"
+TRAIT_COUNT = 10
 
 
 class Thermostat:
+    __traits__ = [
+        "Connectivity",
+        "Fan",
+        "Humidity",
+        "Info",
+        "Settings",
+        "Temperature",
+        "ThermostatEco",
+        "ThermostatHvac",
+        "ThermostatMode",
+        "ThermostatTemperatureSetpoint",
+    ]
     __slots__ = (
         "_raw_data",
         "_device_id",
@@ -18,6 +32,7 @@ class Thermostat:
         "_thermostat_hvac",
         "_thermostat_mode",
         "_thermostat_temperature",
+        *__traits__,
     )
 
     def __init__(self, data: dict):
@@ -56,6 +71,12 @@ class Thermostat:
         self._thermostat_temperature = ThermostatTemperatureSetpointTrait(
             traits.get(ThermostatTemperatureSetpointTrait.domain())
         )
+
+        traits = self.__slots__[2:-10]
+
+        for trait in traits:
+            attr = getattr(self, trait)
+            setattr(self, attr.__class__.__name__.replace("Trait", ""), attr)
 
     async def update_device(self, api: Api):
         data = await api.get_exact_device(self.device_id)
