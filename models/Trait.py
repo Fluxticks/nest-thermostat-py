@@ -86,7 +86,10 @@ class HumidityTrait(Trait):
         if not data:
             self._humidity_percentage = 0
         else:
-            self._humidity_percentage = float(data.get("ambientHumidityPercent"))
+            try:
+                self._humidity_percentage = float(data.get("ambientHumidityPercent"))
+            except TypeError:
+                self._humidity_percentage = None
 
         super().__init__(self.domain())
 
@@ -145,7 +148,10 @@ class TemperatureTrait(Trait):
         if not data:
             self._ambient_temperature = 0
         else:
-            self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
+            try:
+                self._ambient_temperature = float(data.get("ambientTemperatureCelsius"))
+            except TypeError:
+                self._ambient_temperature = None
         super().__init__(self.domain())
 
     @classmethod
@@ -169,8 +175,14 @@ class ThermostatEcoTrait(Trait):
         else:
             self._available_modes = data.get("availableModes")
             self._mode = data.get("mode")
-            self._heat_target = float(data.get("heatCelsius"))
-            self._cool_target = float(data.get("coolCelsius"))
+            try:
+                self._heat_target = float(data.get("heatCelsius"))
+            except TypeError:
+                self._heat_target = None
+            try:
+                self._cool_target = float(data.get("coolCelsius"))
+            except TypeError:
+                self._cool_target = None
         super().__init__(self.domain())
 
     @classmethod
@@ -254,8 +266,14 @@ class ThermostatTemperatureSetpointTrait(Trait):
             self._heat_target = 0
             self._cool_target = 0
         else:
-            self._heat_target = float(data.get("heatCelsius"))
-            self._cool_target = float(data.get("coolCelsius"))
+            try:
+                self._heat_target = float(data.get("heatCelsius"))
+            except TypeError:
+                self._heat_target = None
+            try:
+                self._cool_target = float(data.get("coolCelsius"))
+            except TypeError:
+                self._cool_target = None
         super().__init__(self.domain())
 
     @classmethod
