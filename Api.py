@@ -59,12 +59,12 @@ class Api:
         return True
 
     async def _post_command(self, device_id: str, command: str, params: dict):
-        COMMAND_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self.project_id}/{device_id}:executeCommand"
+        COMMAND_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self.project_id}/devices/{device_id}:executeCommand"
         data = {"command": command, "params": params}
         _, headers = await self.get_session_auth()
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(COMMAND_URL, headers=headers, data=data) as resp:
+            async with session.post(COMMAND_URL, headers=headers, json=data) as resp:
                 if resp.status != 200:
                     raise ResponseCode(resp.status, error=await resp.json())
                 else:
