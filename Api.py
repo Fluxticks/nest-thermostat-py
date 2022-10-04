@@ -9,6 +9,10 @@ class Api:
     def __init__(self, auth: Auth):
         self._auth = auth
 
+    @property
+    def project_id(self):
+        return self._auth.project_id
+
     async def get_devices(self):
         session_token = await self._auth.get_access_token()
         DEVICES_URL = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{self._auth.project_id}/devices"
